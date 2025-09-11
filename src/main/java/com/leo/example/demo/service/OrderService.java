@@ -29,7 +29,6 @@ public class OrderService {
         var order = new Order(id, in.userId(), in.total(), "CREATED", Instant.now());
         repo.save(order);
 
-        // event publishing
         try {
             var evt = new com.leo.example.demo.dto.OrderCreatedEvent(order.getId(), order.getUserId(), order.getTotal());
             publisher.publish(evt);
