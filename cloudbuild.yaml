@@ -1,0 +1,40 @@
+substitutions:
+  _REGION: "us-west1"
+  _SERVICE: "leo-gcp-demo"
+
+steps:
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$BUILD_ID",
+        "."
+      ]
+
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "push",
+        "us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$BUILD_ID"
+      ]
+
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    entrypoint: gcloud
+    args:
+      [
+        "run","deploy","${_SERVICE}",
+        "--image","us-west1-docker.pkg.dev/$PROJECT_ID/cloud-run-source-deploy/${_SERVICE}:$BUILD_ID",
+        "--region","${_REGION}",
+        "--platform","managed",
+        "--allow-unauthenticated",
+        "--cpu","1","--memory","512Mi","--port","8080",
+        # ---- Cloud SQL wiring ----
+        "--add-cloudsql-instances","leo-main-project-471713:us-west1:leo-main-project-postgres-database",
+        # ---- Spring profile + secrets ----
+        "--set-env-vars","SPRING_PROFILES_ACTIVE=cloud",
+        "--set-secrets","DB_PASSWORD=DB_PASSWORD:latest",
+        # (Optional) give JVM more headroom on Cloud Run
+        "--set-env-vars","JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0",
+        "--timeout","300"
+      ]
