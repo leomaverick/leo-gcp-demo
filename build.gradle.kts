@@ -24,7 +24,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.13")
 	implementation("com.google.cloud.sql:postgres-socket-factory:1.16.0")
-	implementation("com.google.cloud:google-cloud-pubsub:2.40.0")
+
+
+	implementation(platform("com.google.cloud:libraries-bom:26.49.0"))
+
+
+	implementation("com.google.cloud:google-cloud-pubsub")
 
 	developmentOnly("org.springframework.boot:spring-boot-devtools")
 	runtimeOnly("org.postgresql:postgresql")
