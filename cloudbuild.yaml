@@ -36,6 +36,7 @@ steps:
         "--set-secrets","DB_PASSWORD=DB_PASSWORD:latest",
         # (Optional) give JVM more headroom on Cloud Run
         "--set-env-vars","JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0",
+        "--set-env-vars","ORDER_TOPIC=order-created",
         "--timeout","300"
       ]
 
