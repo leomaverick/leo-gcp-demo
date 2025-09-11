@@ -38,3 +38,7 @@ steps:
         "--set-env-vars","JAVA_TOOL_OPTIONS=-XX:MaxRAMPercentage=75.0",
         "--timeout","300"
       ]
+
+options:
+  logging: CLOUD_LOGGING_ONLY
+
